@@ -28,10 +28,11 @@ export default function AuthPage() {
 
             if (response.ok) {
                 setMessage('Login successful');
-                router.push('../managerDashboard');
+                router.push('/customer/customerDashboard'); // This directs users to the customer dashboard page
             } else {
                 setMessage(data.message || 'Invalid username or password');
             }
+            
         } catch (error) {
             setMessage('An error occurred. Please try again.');
         }
@@ -100,7 +101,7 @@ export default function AuthPage() {
                     </Typography>
                 )}
                 <Typography variant="body2" sx={{ marginTop: 2, color: '#6b6b6b' }}>
-                    Don't have an account? <Link href="/register" underline="hover" color="#6272e3">Sign Up here</Link>
+                    Don't have an account? <Link href="/" underline="hover" color="#6272e3">Sign Up here</Link>
                 </Typography>
             </Box>
         </Container>

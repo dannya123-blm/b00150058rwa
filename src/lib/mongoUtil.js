@@ -1,8 +1,8 @@
 // mongoUtil.js
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.DB_URI; // Ensure this is correctly configured in your .env.local file
-const client = new MongoClient(uri);
+const MongoDBURI = process.env.MongoDBURI; // Ensure this is correctly configured in your .env.local file
+const client = new MongoClient(MongoDBURI);
 
 let dbConnection;
 
