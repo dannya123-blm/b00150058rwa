@@ -118,7 +118,7 @@ export default function Register() {
                     </Typography>
                 )}
                 <Typography variant="body2" sx={{ marginTop: 2, color: '#6b6b6b' }}>
-    Already have an account? <Link href="pages/Login" underline="hover" color="#6272e3">Login here</Link>
+    Already have an account? <Link href="/login" underline="hover" color="#6272e3">Login here</Link>
 </Typography>
 
             </Box>

@@ -28,7 +28,7 @@ export default function AuthPage() {
 
             if (response.ok) {
                 setMessage('Login successful');
-                router.push('../dashboard');
+                router.push('../managerDashboard');
             } else {
                 setMessage(data.message || 'Invalid username or password');
             }
