@@ -1,43 +1,38 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { Box, Button, TextField, Typography, Link, Container } from '@mui/material';
 import Image from "next/image";
+import { useRouter } from 'next/navigation';
 
-export default function Register() {
+export default function AuthPage() {
     const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
-    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
-    const handleSubmit = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setMessage('');
 
         try {
-            const response = await fetch('/api/register', {
+            const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, email, password }),
+                body: JSON.stringify({ username, password }),
             });
 
             const data = await response.json();
-            setLoading(false);
 
             if (response.ok) {
-                setMessage(data.message || 'Registration successful');
-                setUsername('');
-                setEmail('');
-                setPassword('');
+                setMessage('Login successful');
+                router.push('../dashboard');
             } else {
-                setMessage(data.message || 'Registration failed');
+                setMessage(data.message || 'Invalid username or password');
             }
         } catch (error) {
-            setLoading(false);
             setMessage('An error occurred. Please try again.');
         }
     };
@@ -60,7 +55,7 @@ export default function Register() {
                 priority
                 style={{ marginBottom: '2rem' }}
             />
-            <Box component="form" onSubmit={handleSubmit} sx={{
+            <Box component="form" onSubmit={handleLogin} sx={{
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -71,18 +66,9 @@ export default function Register() {
                     fullWidth
                     variant="outlined"
                     label="Username"
+                    margin="normal"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    margin="normal"
-                    sx={{ bgcolor: 'white' }}
-                />
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    margin="normal"
                     sx={{ bgcolor: 'white' }}
                 />
                 <TextField
@@ -90,16 +76,15 @@ export default function Register() {
                     variant="outlined"
                     label="Password"
                     type="password"
+                    margin="normal"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    margin="normal"
                     sx={{ bgcolor: 'white' }}
                 />
                 <Button
-                    fullWidth
                     type="submit"
+                    fullWidth
                     variant="contained"
-                    disabled={loading}
                     sx={{
                         marginTop: 2,
                         bgcolor: '#6272e3',
@@ -107,18 +92,15 @@ export default function Register() {
                         ':hover': { bgcolor: '#556bd8' },
                     }}
                 >
-                    {loading ? 'Registering...' : 'Register'}
+                    Login
                 </Button>
                 {message && (
-                    <Typography variant="body2" sx={{
-                        marginTop: 2,
-                        color: message.includes('successful') ? 'red' : 'green',
-                    }}>
+                    <Typography variant="body2" sx={{ marginTop: 2, color: '#6b6b6b' }}>
                         {message}
                     </Typography>
                 )}
                 <Typography variant="body2" sx={{ marginTop: 2, color: '#6b6b6b' }}>
-                    Already have an account? <Link href="/login" underline="hover" color="#6272e3">Login here</Link>
+                    Don't have an account? <Link href="/register" underline="hover" color="#6272e3">Sign Up here</Link>
                 </Typography>
             </Box>
         </Container>
