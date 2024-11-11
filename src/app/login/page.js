@@ -14,21 +14,24 @@ export default function AuthPage() {
     const handleLogin = async (e) => {
         e.preventDefault();
         setMessage('');
-
+    
         try {
             const response = await fetch('/api/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
             });
-
+    
             const data = await response.json();
-
+    
             if (response.ok) {
                 setMessage('Login successful');
-                router.push('/customer/customerDashboard'); // This directs users to the customer dashboard page
+                
+                if(data.role === 'manager') {
+                    router.push('/manager/managerDashboard');
+                } else if(data.role === 'customer') {
+                    router.push('/customer/customerDashboard');
+                }
             } else {
                 setMessage(data.message || 'Invalid username or password');
             }
@@ -37,6 +40,7 @@ export default function AuthPage() {
             setMessage('An error occurred. Please try again.');
         }
     };
+    
 
     return (
         <Container maxWidth="xs" sx={{
