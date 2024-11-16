@@ -103,8 +103,8 @@ export default function Register() {
         }}
       >
         <Image
-          src="/images/logo.png"
-          alt="DVS Note logo"
+          src="/Images/kirspy.png"
+          alt="Kirspy"
           width={260}
           height={200}
           priority
@@ -119,7 +119,7 @@ export default function Register() {
             flexDirection: "column",
             alignItems: "center",
             border: "none",
-            background: "rgba(255, 255, 255, 0.2)", // Semi-transparent background for form container
+            background: "#1b1f3a", 
             padding: 4,
             borderRadius: 2,
           }}
@@ -197,7 +197,7 @@ export default function Register() {
             sx={{ marginTop: 2, color: "#f3f3f3" }}
           >
             Already have an account?{" "}
-            <Link href="/login" underline="hover" color="#6272e3">
+            <Link href="/login" underline="hover" color="#1b1f3">
               Login here
             </Link>
           </Typography>
