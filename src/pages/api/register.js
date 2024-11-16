@@ -6,13 +6,14 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         try {
             const db = await connectToDatabase();
-            const { username, email, password } = req.body;
+            const { username, email, password, role } = req.body;
             const hashedPassword = await bcrypt.hash(password, 10);
 
             const result = await db.collection('Users').insertOne({
                 username,
                 email,
                 password: hashedPassword,
+                role
             });
 
             if (result.acknowledged) {

@@ -17,9 +17,12 @@ export default async function handler(req, res) {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
+                // In your login handler function after successful password verification:
         const isPasswordMatch = await bcrypt.compare(password, user.password);
-        if (!isPasswordMatch) {
-            return res.status(400).json({ success: false, message: 'Invalid credentials' });
+        if (isPasswordMatch) {
+            res.status(200).json({ success: true, message: 'Login successful', role: user.role });
+        } else {
+            res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
         res.status(200).json({ success: true, message: 'Login successful' });

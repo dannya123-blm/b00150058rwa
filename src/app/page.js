@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { Box, Button, TextField, Typography, Link, Container } from '@mui/material';
 import Image from "next/image";
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+
 
 export default function Register() {
     const [username, setUsername] = useState('');
@@ -10,29 +13,37 @@ export default function Register() {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const [role, setRole] = useState('');
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setMessage('');
-
+    
         try {
             const response = await fetch('/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, email, password }),
+                body: JSON.stringify({
+                    username,
+                    email,
+                    password,
+                    role  
+                }),
             });
-
+    
             const data = await response.json();
             setLoading(false);
-
+    
             if (response.ok) {
                 setMessage(data.message || 'Registration successful');
                 setUsername('');
                 setEmail('');
                 setPassword('');
+                setRole(''); 
             } else {
                 setMessage(data.message || 'Registration failed');
             }
@@ -41,6 +52,7 @@ export default function Register() {
             setMessage('An error occurred. Please try again.');
         }
     };
+    
 
     return (
         <Container maxWidth="xs" sx={{
@@ -95,6 +107,21 @@ export default function Register() {
                     margin="normal"
                     sx={{ bgcolor: 'white' }}
                 />
+                <TextField
+                    select
+                    label="Role"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    helperText="Please select your role"
+                    fullWidth
+                    margin="normal"
+                    variant="outlined"
+                    sx={{ bgcolor: 'white' }}
+                    >
+                    <MenuItem value="manager">Manager</MenuItem>
+                    <MenuItem value="customer">Customer</MenuItem>
+                </TextField>
+                
                 <Button
                     fullWidth
                     type="submit"

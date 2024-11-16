@@ -22,19 +22,21 @@ export default function AuthPage() {
                 body: JSON.stringify({ username, password }),
             });
     
+                    // In the handleLogin function of your AuthPage component:
             const data = await response.json();
-    
+
             if (response.ok) {
                 setMessage('Login successful');
-                
-                if(data.role === 'manager') {
+                // Redirect based on the role
+                if (data.role === 'manager') {
                     router.push('/manager/managerDashboard');
-                } else if(data.role === 'customer') {
+                } else if (data.role === 'customer') {
                     router.push('/customer/customerDashboard');
                 }
             } else {
                 setMessage(data.message || 'Invalid username or password');
             }
+
             
         } catch (error) {
             setMessage('An error occurred. Please try again.');
