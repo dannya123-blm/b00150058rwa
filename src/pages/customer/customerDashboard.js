@@ -68,7 +68,7 @@ export default function DashboardPage() {
           boxShadow: 'none',
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <IconButton
             size="large"
             edge="start"
@@ -78,6 +78,12 @@ export default function DashboardPage() {
           >
             <MenuIcon />
           </IconButton>
+          <Box
+            component="img"
+            src="../images/KirspyKreme.png" 
+            alt="Kirspy Kreme Logo"
+            sx={{ width: '100px', height: 'auto', margin: 'auto' }}
+          />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Kirspy Kremes
           </Typography>
@@ -87,6 +93,9 @@ export default function DashboardPage() {
         </Toolbar>
       </AppBar>
 
+
+
+      
       {showDash && (
         <Box
           component="section"
