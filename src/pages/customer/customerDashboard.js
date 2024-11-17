@@ -130,11 +130,11 @@ export default function DashboardPage() {
                   }}
                 >
                   <img
-                    src={`/images/${item.pname}.png`} // Placeholder for product images
+                    src={item.imageUrl || '/images/placeholder.png'} 
                     alt={item.pname}
                     style={{ width: '100px', height: '100px', marginBottom: '10px' }}
                   />
-                  <Typography>{item.pname}</Typography>
+                    <Typography>{item.pname}</Typography>
                   <Typography>{item.price}</Typography>
                   <Button
                     variant="outlined"
