@@ -13,7 +13,6 @@ export default function DashboardPage() {
   const [showDash, setShowDash] = React.useState(false);
   const [message, setMessage] = React.useState('');
   const [data, setData] = React.useState([]);
-  const [cart, setCart] = React.useState([]);
 
   React.useEffect(() => {
     if (showDash) {
@@ -43,15 +42,26 @@ export default function DashboardPage() {
     setShowDash(true);
   };
 
-  const addToCart = (product) => {
-    setCart([...cart, product]);
-  };
+  const putInCart = (pname) => {
+    console.log("Putting in cart:", pname);
 
-  const checkout = () => {
-    console.log('Cart:', cart);
-    alert('Checkout complete! Cart contents have been logged.');
-    setCart([]); // Clears the cart after checkout
-  };
+    fetch(`/api/putInCart?pname=${encodeURIComponent(pname)}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to add product to cart");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data.message); // Optional: Log success message
+        alert(`Added ${pname} to your cart!`);
+      })
+      .catch((error) => {
+        console.error("Error adding to cart:", error);
+        alert("Failed to add product to cart. Please try again.");
+      });
+};
+
 
   return (
     <Box
@@ -84,18 +94,12 @@ export default function DashboardPage() {
             alt="Kirspy Kreme Logo"
             sx={{ width: '100px', height: 'auto', margin: 'auto' }}
           />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Kirspy Kremes
-          </Typography>
           <Button color="inherit" onClick={runShowDash}>
             Dashboard
           </Button>
         </Toolbar>
       </AppBar>
 
-
-
-      
       {showDash && (
         <Box
           component="section"
@@ -143,12 +147,12 @@ export default function DashboardPage() {
                     alt={item.pname}
                     style={{ width: '100px', height: '100px', marginBottom: '10px' }}
                   />
-                    <Typography>{item.pname}</Typography>
+                  <Typography>{item.pname}</Typography>
                   <Typography>{item.price}</Typography>
                   <Button
                     variant="outlined"
                     color="inherit"
-                    onClick={() => addToCart(item)}
+                    onClick={() => putInCart(item.pname)}
                   >
                     Add to cart
                   </Button>
@@ -158,35 +162,6 @@ export default function DashboardPage() {
               <Typography>No products available.</Typography>
             )}
           </Box>
-
-          {cart.length > 0 && (
-            <Box
-              sx={{
-                marginTop: '20px',
-                padding: '10px',
-                border: '1px solid white',
-                borderRadius: '8px',
-                background: 'rgba(0, 0, 0, 0.5)',
-              }}
-            >
-              <Typography variant="h6" gutterBottom>
-                Shopping Cart
-              </Typography>
-              {cart.map((item, i) => (
-                <Typography key={i}>
-                  {item.pname} - {item.price}
-                </Typography>
-              ))}
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={checkout}
-                sx={{ marginTop: '10px' }}
-              >
-                Checkout
-              </Button>
-            </Box>
-          )}
         </Box>
       )}
     </Box>
