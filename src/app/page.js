@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import MenuIcon from "@mui/icons-material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -22,7 +21,6 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [role, setRole] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,8 +36,7 @@ export default function Register() {
         body: JSON.stringify({
           username,
           email,
-          password,
-          role,
+          password, // We are no longer passing the role here
         }),
       });
 
@@ -51,7 +48,6 @@ export default function Register() {
         setUsername("");
         setEmail("");
         setPassword("");
-        setRole("");
       } else {
         setMessage(data.message || "Registration failed");
       }
@@ -152,20 +148,6 @@ export default function Register() {
             margin="normal"
             sx={{ bgcolor: "white" }}
           />
-          <TextField
-            select
-            label="Role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            helperText="Please select your role"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            sx={{ bgcolor: "white" }}
-          >
-            <MenuItem value="manager">Manager</MenuItem>
-            <MenuItem value="customer">Customer</MenuItem>
-          </TextField>
 
           <Button
             fullWidth

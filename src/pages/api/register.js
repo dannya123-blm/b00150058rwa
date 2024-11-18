@@ -6,18 +6,21 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         try {
             const db = await connectToDatabase();
-            const { username, email, password, role } = req.body;
+            const { username, email, password } = req.body;
             const hashedPassword = await bcrypt.hash(password, 10);
+
+            // Automatically assign role based on email
+            const role = email.includes("manager") ? "manager" : "customer";
 
             const result = await db.collection('Users').insertOne({
                 username,
                 email,
                 password: hashedPassword,
-                role
+                role  // role is set based on the email check
             });
 
             if (result.acknowledged) {
-                res.status(201).json({ success: true, message: 'User registered' });
+                res.status(201).json({ success: true, message: 'User registered', role: role });
             } else {
                 res.status(400).json({ success: false, message: 'Registration failed' });
             }
