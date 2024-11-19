@@ -99,13 +99,17 @@ export default function Register() {
         }}
       >
         <Image
-          src="/Images/kirspy.png"
-          alt="Kirspy"
-          width={260}
-          height={200}
-          priority
-          style={{ marginBottom: "2rem" }}
-        />
+      src="/images/krispyKreme.png"
+      alt="Kirspy"
+      width={260}
+      height={200}
+      priority
+      style={{
+        marginBottom: "2rem",
+        borderRadius: "10px"
+      }}
+    />
+
         <Box
           component="form"
           onSubmit={handleSubmit}
