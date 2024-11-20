@@ -1,25 +1,36 @@
 import connectToDatabase from '../../lib/mongoUtil';
 
 export default async function handler(req, res) {
-    const { pname, username } = req.query; // Assuming username is passed as query parameter
+  if (req.method !== 'POST') {
+    return res.status(405).json({ success: false, message: 'Method Not Allowed' });
+  }
 
-    try {
-        const db = await connectToDatabase();
-        const product = await db.collection('products').findOne({ pname });
+  const cartItems = req.body;
 
-        if (!product) {
-            return res.status(404).json({ success: false, message: 'Product not found.' });
-        }
+  if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+    return res.status(400).json({ success: false, message: 'Cart is empty or invalid format' });
+  }
 
-        await db.collection('shopping_cart').insertOne({
-            pname: product.pname, 
-            price: product.price, 
-            username: username  // Use the passed username
-        });
+  try {
+    const db = await connectToDatabase();
+    const shoppingCartCollection = db.collection('shopping_cart');
 
-        res.status(200).json({ success: true, message: 'Product added to cart' });
-    } catch (error) {
-        console.error('Error in putInCart API:', error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
-    }
+    // Calculate total price and extract product names
+    const totalPrice = cartItems.reduce((sum, item) => sum + parseFloat(item.price.replace(' euro', '')), 0);
+    const productNames = cartItems.map((item) => item.pname);
+
+    // Insert the grouped cart into the database
+    const cartDocument = {
+      pnames: productNames,
+      total: `${totalPrice} euro`,
+      username: 'guest', // Replace with actual username if available
+    };
+
+    const result = await shoppingCartCollection.insertOne(cartDocument);
+
+    res.status(200).json({ success: true, message: 'Cart submitted successfully!', cartId: result.insertedId });
+  } catch (error) {
+    console.error('Error in putInCart API:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
 }
