@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Paper, Button } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 export default function Checkout() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -36,12 +38,12 @@ export default function Checkout() {
       const response = await fetch('/api/confirmOrder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cart), // Send the cart as the payload
+        body: JSON.stringify(cart),
       });
 
       if (response.ok) {
-        alert('Order confirmed!');
-        setCart(null); // Reset the cart after the order is confirmed
+        alert('Order confirmed! Your order has been processed successfully.');
+        router.push('/customer/customerDashboard'); // Redirect to customer dashboard
       } else {
         const error = await response.json();
         alert(`Failed to confirm order: ${error.message}`);
