@@ -132,6 +132,17 @@ export default function DashboardPage() {
                   textAlign: 'center',
                 }}
               >
+                <img
+                  src={item.imageUrl || '/images/placeholder.png'}
+                  alt={item.pname}
+                  style={{
+                    width: '150px',
+                    height: '150px',
+                    objectFit: 'cover',
+                    borderRadius: '8px',
+                    marginBottom: '10px',
+                  }}
+                />
                 <Typography variant="subtitle1" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
                   {item.pname}
                 </Typography>

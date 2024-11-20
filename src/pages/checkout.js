@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Paper, Button } from '@mui/material';
 
 export default function Checkout() {
   const [cart, setCart] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -18,10 +19,38 @@ export default function Checkout() {
         }
       } catch (error) {
         console.error('Error fetching cart:', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCart();
   }, []);
+
+  const confirmOrder = async () => {
+    if (!cart) {
+      alert('Your cart is empty!');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/confirmOrder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cart), // Send the cart as the payload
+      });
+
+      if (response.ok) {
+        alert('Order confirmed!');
+        setCart(null); // Reset the cart after the order is confirmed
+      } else {
+        const error = await response.json();
+        alert(`Failed to confirm order: ${error.message}`);
+      }
+    } catch (error) {
+      console.error('Error confirming order:', error);
+      alert('An error occurred. Please try again.');
+    }
+  };
 
   return (
     <Box
@@ -35,22 +64,45 @@ export default function Checkout() {
       <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: 3, fontWeight: 'bold' }}>
         Checkout
       </Typography>
-      {cart ? (
+      {loading ? (
+        <Typography sx={{ textAlign: 'center', marginTop: 5 }}>Loading cart details...</Typography>
+      ) : cart ? (
         <Box>
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
             Items in your cart:
           </Typography>
           {cart.pnames.map((item, index) => (
-            <Typography key={index} sx={{ marginBottom: 1 }}>
-              {item}
-            </Typography>
+            <Paper
+              key={index}
+              sx={{
+                padding: 2,
+                marginBottom: 1,
+                borderRadius: 2,
+                background: 'rgba(255, 255, 255, 0.2)',
+              }}
+            >
+              <Typography>{item}</Typography>
+            </Paper>
           ))}
           <Typography variant="h6" sx={{ marginTop: 3 }}>
             Total: {cart.total}
           </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              marginTop: 3,
+              width: '100%',
+              padding: 1.5,
+              fontSize: '1rem',
+            }}
+            onClick={confirmOrder}
+          >
+            Confirm Order
+          </Button>
         </Box>
       ) : (
-        <Typography sx={{ textAlign: 'center', marginTop: 5 }}>Loading cart details...</Typography>
+        <Typography sx={{ textAlign: 'center', marginTop: 5 }}>Your cart is empty!</Typography>
       )}
     </Box>
   );
