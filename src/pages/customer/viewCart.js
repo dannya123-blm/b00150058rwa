@@ -1,12 +1,11 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Paper, Button, IconButton } from '@mui/material';
-import { Add, Remove } from '@mui/icons-material';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Box, Typography, Paper, Button, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Add, Remove } from '@mui/icons-material';
 
 export default function ViewCart() {
   const [cartItems, setCartItems] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false); // State for controlling the Dialog visibility
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -31,25 +30,33 @@ export default function ViewCart() {
     }
   };
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    router.push('/checkout'); // Navigate to checkout page after closing the dialog
+  };
 
-const submitCart = async () => {
+  const submitCart = async () => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
     try {
-        const response = await fetch('/api/putInCart', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                cartItems: cartItems,
-                username: userData.username  // Pass username from local storage
-            }),
-        });
+      const response = await fetch('/api/putInCart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cartItems: cartItems,
+          username: userData.username // Pass username from local storage
+        }),
+      });
 
-        // Handle response...
+      if (response.ok) {
+        setDialogOpen(true); // Open the success dialog
+      } else {
+        alert('Failed to submit cart.');
+      }
     } catch (error) {
-        console.error('Submit cart error:', error);
+      console.error('Submit cart error:', error);
+      alert('An error occurred. Please try again.');
     }
-};
-
+  };
 
   return (
     <Box
@@ -116,6 +123,24 @@ const submitCart = async () => {
       ) : (
         <Typography sx={{ textAlign: 'center', marginTop: 5 }}>Your cart is empty.</Typography>
       )}
+      <Dialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Cart Submission Success"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Cart submitted successfully!!!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary" autoFocus>
+            Go to Checkout
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

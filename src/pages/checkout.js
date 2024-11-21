@@ -1,12 +1,11 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Paper, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
+import { Box, Typography, Paper, Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 export default function Checkout() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false); // State to control the dialog visibility
   const router = useRouter();
 
   useEffect(() => {
@@ -28,6 +27,11 @@ export default function Checkout() {
     fetchCart();
   }, []);
 
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    router.push('/customer/customerDashboard'); // Redirect to dashboard after closing dialog
+  };
+
   const confirmOrder = async () => {
     if (!cart) {
       alert('Your cart is empty!');
@@ -42,8 +46,7 @@ export default function Checkout() {
       });
 
       if (response.ok) {
-        alert('Order confirmed! Your order has been processed successfully.');
-        router.push('/customer/customerDashboard'); // Redirect to customer dashboard
+        setOpenDialog(true); // Open the dialog on successful order
       } else {
         const error = await response.json();
         alert(`Failed to confirm order: ${error.message}`);
@@ -104,8 +107,21 @@ export default function Checkout() {
           </Button>
         </Box>
       ) : (
-        <Typography sx={{ textAlign: 'center', marginTop: 5 }}>Your cart is empty!</Typography>
+        <Typography sx={{ textAlign: 'center', marginTop: 5 }}>Your cart is empty.</Typography>
       )}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="success-dialog-title"
+        aria-describedby="success-dialog-description"
+      >
+        <DialogTitle id="success-dialog-title">{"Order Made Successfully!"}</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
