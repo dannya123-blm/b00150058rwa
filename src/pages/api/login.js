@@ -23,7 +23,11 @@ export default async function handler(req, res) {
 
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (isPasswordMatch) {
-            res.status(200).json({ success: true, message: 'Login successful', role: user.role });
+            const userData = {
+                username: user.username,
+                role: user.role
+            };
+            res.status(200).json({ success: true, message: 'Login successful', userData });
         } else {
             res.status(400).json({ success: false, message: 'Invalid credentials' });
         }

@@ -26,11 +26,12 @@ export default function AuthPage() {
             const data = await response.json();
 
             if (response.ok) {
+                localStorage.setItem('userData', JSON.stringify(data.userData)); // Save user data to local storage
                 setMessage('Login successful');
-                // Redirect based on the role
-                if (data.role === 'manager') {
+                
+                if (data.userData.role === 'manager') {
                     router.push('/manager/managerDashboard');
-                } else if (data.role === 'customer') {
+                } else if (data.userData.role === 'customer') {
                     router.push('/customer/customerDashboard');
                 }
             } else {

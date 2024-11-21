@@ -31,25 +31,25 @@ export default function ViewCart() {
     }
   };
 
-  const submitCart = async () => {
-    try {
-      const response = await fetch('/api/putInCart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cartItems),
-      });
+  const userData = JSON.parse(localStorage.getItem('userData'));
 
-      if (response.ok) {
-        alert('Cart submitted successfully!');
-        router.push('/checkout');
-      } else {
-        const errorData = await response.json();
-        alert(`Failed to submit cart: ${errorData.message}`);
-      }
+const submitCart = async () => {
+    try {
+        const response = await fetch('/api/putInCart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                cartItems: cartItems,
+                username: userData.username  // Pass username from local storage
+            }),
+        });
+
+        // Handle response...
     } catch (error) {
-      console.error('Submit cart error:', error);
+        console.error('Submit cart error:', error);
     }
-  };
+};
+
 
   return (
     <Box

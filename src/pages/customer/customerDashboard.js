@@ -29,6 +29,19 @@ export default function DashboardPage() {
     fetchWeather();
   }, []);
 
+  // Part of customerDashboard.js or similar components
+useEffect(() => {
+  const userData = JSON.parse(localStorage.getItem('userData'));
+  if (userData) {
+      console.log("Logged in as:", userData.username);
+      // You can also set this data to state if needed to display in the component
+  } else {
+      // Handle case where there is no session data (user not logged in or session expired)
+      router.push('/login');
+  }
+}, []);
+
+
   // Fetch products
   useEffect(() => {
     const fetchData = async () => {
