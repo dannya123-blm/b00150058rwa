@@ -1,4 +1,3 @@
-// src/pages/api/register.js
 import connectToDatabase from '../../lib/mongoUtil';
 import bcrypt from 'bcryptjs';
 
@@ -22,7 +21,7 @@ export default async function handler(req, res) {
             username,
             email,
             password: hashedPassword,
-            role  // role is set based on the email check
+            role  
         });
 
         if (result.acknowledged) {
