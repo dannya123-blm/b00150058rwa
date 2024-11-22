@@ -1,4 +1,3 @@
-// mongoUtil.js
 import { MongoClient } from 'mongodb';
 
 const MongoDBURI = process.env.MongoDBURI;

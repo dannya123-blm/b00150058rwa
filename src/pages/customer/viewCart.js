@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Box, Typography, Paper, Button, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { Add, Remove } from '@mui/icons-material';
+import { Box, Typography, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
 export default function ViewCart() {
   const [cartItems, setCartItems] = useState([]);
@@ -70,7 +69,7 @@ export default function ViewCart() {
               }}
             >
               <Typography>
-                {item.pname} - €{item.price} x {item.quantity}
+                {item.pname} : €{item.price}
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 1 }}>
                 <Button

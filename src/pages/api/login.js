@@ -1,4 +1,3 @@
-// src/pages/api/login.js
 import connectToDatabase from '../../lib/mongoUtil';
 
 export default async function handler(req, res) {

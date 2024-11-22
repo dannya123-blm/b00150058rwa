@@ -29,12 +29,11 @@ export default function DashboardPage() {
     fetchWeather();
   }, []);
 
-  // Part of customerDashboard.js or similar components
+  //local storage to store the data of active users
 useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (userData) {
         console.log("Logged in as:", userData.username);
-        // You can also set this data to state if needed to display in the component
     } else {
         // Handle case where there is no session data (user not logged in or session expired)
         router.push('/login');
@@ -42,7 +41,7 @@ useEffect(() => {
 }, []);
 
 
-  // Fetch products
+    // Fetch products from my local API getProducts to display on screen
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -60,11 +59,13 @@ useEffect(() => {
     fetchData();
   }, []);
 
+  //adding products tot the cart
   const addToCart = (product) => {
     setCartItems((prev) => [...prev, product]);
     alert(`${product.pname} has been added to the cart!`);
   };
 
+  // Navigate to view cart page with cart items as a query parameter
   const viewCart = () => {
     router.push({
       pathname: '/customer/viewCart',

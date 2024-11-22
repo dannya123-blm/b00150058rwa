@@ -6,6 +6,7 @@ export default function ManagerDashboard() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    //fetching orders
     useEffect(() => {
         const fetchOrders = async () => {
             setLoading(true);
