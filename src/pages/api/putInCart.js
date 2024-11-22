@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         const cartDocument = {
             pnames: productNames,
             total: `${totalPrice} euro`,
-            username: username  // Use provided username
+            username: username  
         };
 
         const result = await shoppingCartCollection.insertOne(cartDocument);

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Box, Button, TextField, Typography, Link, Container, AppBar, Toolbar, IconButton } from '@mui/material';
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
-import MenuIcon from '@mui/icons-material/Menu'; // Add this import for the menu icon
+import MenuIcon from '@mui/icons-material/Menu'; 
 
 export default function AuthPage() {
     const [username, setUsername] = useState('');

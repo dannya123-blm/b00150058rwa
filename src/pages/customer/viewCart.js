@@ -16,20 +16,6 @@ export default function ViewCart() {
     }
   }, [searchParams]);
 
-  const increaseQuantity = (index) => {
-    const updatedCart = [...cartItems];
-    updatedCart[index].quantity += 1;
-    setCartItems(updatedCart);
-  };
-
-  const decreaseQuantity = (index) => {
-    const updatedCart = [...cartItems];
-    if (updatedCart[index].quantity > 1) {
-      updatedCart[index].quantity -= 1;
-      setCartItems(updatedCart);
-    }
-  };
-
   const handleCloseDialog = () => {
     setDialogOpen(false);
     router.push('/checkout'); // Navigate to checkout page after closing the dialog
@@ -87,14 +73,6 @@ export default function ViewCart() {
                 {item.pname} - €{item.price} x {item.quantity}
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 1 }}>
-                <Box>
-                  <IconButton onClick={() => decreaseQuantity(index)}>
-                    <Remove />
-                  </IconButton>
-                  <IconButton onClick={() => increaseQuantity(index)}>
-                    <Add />
-                  </IconButton>
-                </Box>
                 <Button
                   variant="contained"
                   color="error"

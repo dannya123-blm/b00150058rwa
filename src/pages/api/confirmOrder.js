@@ -1,14 +1,14 @@
-// Assuming this file is located at src/pages/api/confirmOrder.js
-import connectToDatabase from '../../lib/mongoUtil';  // Make sure this path is correct
+import connectToDatabase from '../../lib/mongoUtil'; 
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
 
-  const { pnames, total, username } = req.body;  // Extract data sent from the client
+  const { pnames, total, username } = req.body;  
 
   try {
+    //getting data from orders collection
     const db = await connectToDatabase();
     const ordersCollection = db.collection('orders');
 
@@ -19,6 +19,7 @@ export default async function handler(req, res) {
       createdAt: new Date(),
     };
 
+    //inserting each order made and using status codes to detect errors with orders
     const result = await ordersCollection.insertOne(order);
     if (result.acknowledged) {
       res.status(200).json({ success: true, message: 'Order confirmed', orderId: result.insertedId });
