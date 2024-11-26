@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, Box, CircularProgress, IconButton, Paper, Toolbar, Typography } from '@mui/material';
-
+import { AppBar, Box, CircularProgress, IconButton, Paper, Toolbar, Typography, Button } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 export default function ManagerDashboard() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
-    //fetching orders
+    // Fetching orders
     useEffect(() => {
         const fetchOrders = async () => {
             setLoading(true);
@@ -26,6 +27,12 @@ export default function ManagerDashboard() {
         fetchOrders();
     }, []);
 
+    // Logout function
+    const logout = () => {
+        localStorage.removeItem('userData'); // Remove user session data
+        router.push('/login'); // Redirect to login page
+    };
+
     return (
         <Box sx={{
             flexGrow: 1,
@@ -39,6 +46,18 @@ export default function ManagerDashboard() {
                     <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
                         Manager Dashboard
                     </Typography>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={logout}
+                        sx={{
+                            textTransform: 'none',
+                            backgroundColor: '#e53935',
+                            ':hover': { backgroundColor: '#c62828' },
+                        }}
+                    >
+                        Logout
+                    </Button>
                 </Toolbar>
             </AppBar>
 

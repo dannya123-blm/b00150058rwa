@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import connectToDatabase from '../../lib/mongoUtil';
 
 export default async function handler(req, res) {
@@ -12,16 +13,17 @@ export default async function handler(req, res) {
     }
 
     try {
-        //connectimng to the database and sents manager role if email has the word manager in it
+        // Hash the password before storing it
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const db = await connectToDatabase();
         const role = email.includes("manager") ? "manager" : "customer";
-        
 
-        // results 
+        // Insert the user with the hashed password
         const result = await db.collection('Users').insertOne({
             username,
             email,
-            password, 
+            password: hashedPassword, 
             role  
         });
 

@@ -29,19 +29,21 @@ export default function DashboardPage() {
     fetchWeather();
   }, []);
 
-  //local storage to store the data of active users
-useEffect(() => {
+  useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (userData) {
         console.log("Logged in as:", userData.username);
     } else {
-        // Handle case where there is no session data (user not logged in or session expired)
         router.push('/login');
     }
-}, []);
+  }, []);
 
+  const logout = () => {
+    localStorage.removeItem('userData'); // Remove user session data
+    router.push('/login'); // Redirect to login page
+  };
 
-    // Fetch products from my local API getProducts to display on screen
+  // Fetch products from API
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -59,13 +61,11 @@ useEffect(() => {
     fetchData();
   }, []);
 
-  //adding products tot the cart
   const addToCart = (product) => {
     setCartItems((prev) => [...prev, product]);
     alert(`${product.pname} has been added to the cart!`);
   };
 
-  // Navigate to view cart page with cart items as a query parameter
   const viewCart = () => {
     router.push({
       pathname: '/customer/viewCart',
@@ -74,14 +74,7 @@ useEffect(() => {
   };
 
   return (
-    <Box
-      sx={{
-        flexGrow: 1,
-        background: 'linear-gradient(135deg, #6a11cb, #2575fc)',
-        minHeight: '100vh',
-        color: '#fff',
-      }}
-    >
+    <Box sx={{ flexGrow: 1, background: 'linear-gradient(135deg, #6a11cb, #2575fc)', minHeight: '100vh', color: '#fff' }}>
       <AppBar position="static" sx={{ background: '#1b1f3a', boxShadow: 'none' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
@@ -104,15 +97,26 @@ useEffect(() => {
               View Cart
             </Button>
           </Badge>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={logout}
+            sx={{
+              textTransform: 'none',
+              backgroundColor: '#e53935',
+              ':hover': { backgroundColor: '#c62828' },
+              marginLeft: 2,
+            }}
+          >
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
 
       {weather && (
         <Box sx={{ textAlign: 'center', padding: 2, background: 'rgba(255, 255, 255, 0.1)' }}>
           <Typography variant="h6">Current Weather in Dublin</Typography>
-          <Typography>
-            {weather.condition.text}, {weather.temp_c}°C
-          </Typography>
+          <Typography>{weather.condition.text}, {weather.temp_c}°C</Typography>
         </Box>
       )}
 
@@ -125,14 +129,7 @@ useEffect(() => {
           <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: 3, fontWeight: 'bold' }}>
             Product List
           </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 3,
-              justifyContent: 'center',
-            }}
-          >
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, justifyContent: 'center' }}>
             {products.map((item, i) => (
               <Paper
                 key={i}
