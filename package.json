@@ -23,6 +23,7 @@
     "next": "15.0.3",
     "next-auth": "^4.24.10",
     "next-session": "^4.0.5",
+    "nodemailer": "^6.9.16",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   }

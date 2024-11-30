@@ -9,36 +9,32 @@ import MenuIcon from '@mui/icons-material/Menu';
 export default function AuthPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState(''); // Added message state to show login status
     const router = useRouter();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setMessage('');
+        setMessage(''); // Clear any previous message
 
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }),
-            });
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+        });
 
-            const data = await response.json();
+        const data = await response.json();
 
-            if (response.ok) {
-                localStorage.setItem('userData', JSON.stringify(data.userData)); // Save user data to local storage
-                setMessage('Login successful');
-                
-                if (data.userData.role === 'manager') {
-                    router.push('/manager/managerDashboard');
-                } else if (data.userData.role === 'customer') {
-                    router.push('/customer/customerDashboard');
-                }
-            } else {
-                setMessage(data.message || 'Invalid username or password');
+        if (response.ok) {
+            localStorage.setItem('userData', JSON.stringify(data.userData)); // Save user data to local storage
+            setMessage('Login successful'); // Show success message
+
+            if (data.userData.role === 'manager') {
+                router.push('/manager/managerDashboard');
+            } else if (data.userData.role === 'customer') {
+                router.push('/customer/customerDashboard');
             }
-        } catch (error) {
-            setMessage('An error occurred. Please try again.');
+        } else {
+            setMessage(data.message || 'Invalid username or password'); // Show error message
         }
     };
 
