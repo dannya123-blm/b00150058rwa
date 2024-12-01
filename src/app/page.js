@@ -27,33 +27,29 @@ export default function Register() {
     setLoading(true);
     setMessage("");
 
-    try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          email,
-          password, // We are no longer passing the role here
-        }),
-      });
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        password, // We are no longer passing the role here
+      }),
+    });
 
+    setLoading(false);
+
+    if (response.ok) {
       const data = await response.json();
-      setLoading(false);
-
-      if (response.ok) {
-        setMessage(data.message || "Registration successful");
-        setUsername("");
-        setEmail("");
-        setPassword("");
-      } else {
-        setMessage(data.message || "Registration failed");
-      }
-    } catch (error) {
-      setLoading(false);
-      setMessage("An error occurred. Please try again.");
+      setMessage(data.message || "Registration successful");
+      setUsername("");
+      setEmail("");
+      setPassword("");
+    } else {
+      const data = await response.json();
+      setMessage(data.message || "Registration failed");
     }
   };
 
@@ -99,16 +95,16 @@ export default function Register() {
         }}
       >
         <Image
-      src="/images/krispyKreme.png"
-      alt="Kirspy"
-      width={260}
-      height={200}
-      priority
-      style={{
-        marginBottom: "2rem",
-        borderRadius: "10px"
-      }}
-    />
+          src="/images/krispyKreme.png"
+          alt="Kirspy"
+          width={260}
+          height={200}
+          priority
+          style={{
+            marginBottom: "2rem",
+            borderRadius: "10px",
+          }}
+        />
 
         <Box
           component="form"
@@ -119,7 +115,7 @@ export default function Register() {
             flexDirection: "column",
             alignItems: "center",
             border: "none",
-            background: "#1b1f3a", 
+            background: "#1b1f3a",
             padding: 4,
             borderRadius: 2,
           }}

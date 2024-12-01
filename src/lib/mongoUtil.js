@@ -7,13 +7,8 @@ let dbConnection;
 
 async function connectToDatabase() {
     if (!dbConnection) {
-        try {
-            await client.connect();
-            dbConnection = client.db('KirspyDB'); 
-        } catch (error) {
-            console.error("Database connection error:", error);
-            throw error;
-        }
+        await client.connect();
+        dbConnection = client.db('KirspyDB'); 
     }
     return dbConnection;
 }
