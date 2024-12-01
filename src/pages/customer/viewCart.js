@@ -43,6 +43,21 @@ export default function ViewCart() {
     }
   };
 
+  // Calculate the total of the cart
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => {
+      // Ensure item.price and item.quantity are valid numbers
+      const price = parseFloat(item.price);
+      const quantity = parseInt(item.quantity, 10);
+
+      if (!isNaN(price) && !isNaN(quantity)) {
+        return total + price * quantity;
+      }
+
+      return total;
+    }, 0).toFixed(2); // Format the total to two decimal places
+  };
+
   return (
     <Box
       sx={{
@@ -83,6 +98,9 @@ export default function ViewCart() {
               </Box>
             </Paper>
           ))}
+          <Typography variant="h6" sx={{ marginTop: 2 }}>
+            Total: €{calculateTotal()}
+          </Typography>
           <Button
             variant="contained"
             color="primary"
