@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AppBar, Box, CircularProgress, IconButton, Paper, Toolbar, Typography, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
+import '../../css/manager.css';
 
 export default function ManagerDashboard() {
     const [orders, setOrders] = useState([]);
@@ -31,27 +32,17 @@ export default function ManagerDashboard() {
     };
 
     return (
-        <Box sx={{
-            flexGrow: 1,
-            background: 'linear-gradient(135deg, #6a11cb, #2575fc)',
-            minHeight: '100vh',
-            color: '#fff',
-            padding: 4
-        }}>
-            <AppBar position="static" sx={{ background: '#1b1f3a', boxShadow: 'none' }}>
-                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
+        <Box className="manager-container">
+            <AppBar position="static" className="manager-appbar">
+                <Toolbar className="manager-toolbar">
+                    <Typography variant="h6" className="manager-title">
                         Manager Dashboard
                     </Typography>
                     <Button
                         variant="contained"
                         color="error"
                         onClick={logout}
-                        sx={{
-                            textTransform: 'none',
-                            backgroundColor: '#e53935',
-                            ':hover': { backgroundColor: '#c62828' },
-                        }}
+                        className="manager-logout-button"
                     >
                         Logout
                     </Button>
@@ -62,13 +53,13 @@ export default function ManagerDashboard() {
                 <CircularProgress />
             ) : (
                 <Box>
-                    <Typography variant="h6" sx={{ mt: 2 }}>Order Stats:</Typography>
+                    <Typography variant="h6" className="manager-order-stats-title">Order Stats:</Typography>
                     <Typography>Total Orders: {orders.length}</Typography>
                     <Typography>Total Cost: €{orders.reduce((acc, order) => acc + parseFloat(order.total), 0).toFixed(2)}</Typography>
-                    
-                    <Typography variant="h6" sx={{ mt: 4 }}>List of Orders:</Typography>
+
+                    <Typography variant="h6" className="manager-order-list-title">List of Orders:</Typography>
                     {orders.map(order => (
-                        <Paper key={order._id} sx={{ p: 2, mt: 2, background: 'rgba(255, 255, 255, 0.2)' }}>
+                        <Paper key={order._id} className="manager-order-item">
                             <Typography>Order ID: {order._id}</Typography>
                             <Typography>User: {order.username}</Typography>
                             <Typography>Time Placed: {new Date(order.createdAt).toLocaleString()}</Typography>

@@ -5,6 +5,9 @@ import { AppBar, Box, Button, Toolbar, Typography, IconButton, Paper, Badge } fr
 import MenuIcon from '@mui/icons-material/Menu';
 import { useRouter } from 'next/navigation';
 
+// Import the customer CSS file
+import '../../css/customer.css';
+
 export default function DashboardPage() {
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState([]);
@@ -63,9 +66,9 @@ export default function DashboardPage() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, background: 'linear-gradient(135deg, #6a11cb, #2575fc)', minHeight: '100vh', color: '#fff' }}>
-      <AppBar position="static" sx={{ background: '#1b1f3a', boxShadow: 'none' }}>
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Box className="customer-dashboard">
+      <AppBar position="static" className="customer-appbar">
+        <Toolbar className="customer-toolbar">
           <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
@@ -77,11 +80,7 @@ export default function DashboardPage() {
               variant="contained"
               color="secondary"
               onClick={viewCart}
-              sx={{
-                textTransform: 'none',
-                backgroundColor: '#ff9800',
-                ':hover': { backgroundColor: '#f57c00' },
-              }}
+              className="customer-cart-button"
             >
               View Cart
             </Button>
@@ -90,12 +89,7 @@ export default function DashboardPage() {
             variant="contained"
             color="error"
             onClick={logout}
-            sx={{
-              textTransform: 'none',
-              backgroundColor: '#e53935',
-              ':hover': { backgroundColor: '#c62828' },
-              marginLeft: 2,
-            }}
+            className="customer-logout-button"
           >
             Logout
           </Button>
@@ -103,7 +97,7 @@ export default function DashboardPage() {
       </AppBar>
 
       {weather && (
-        <Box sx={{ textAlign: 'center', padding: 2, background: 'rgba(255, 255, 255, 0.1)' }}>
+        <Box className="customer-weather">
           <Typography variant="h6">Current Weather in Dublin</Typography>
           <Typography>{weather.condition.text}, {weather.temp_c}°C</Typography>
         </Box>
@@ -114,50 +108,29 @@ export default function DashboardPage() {
           Loading products...
         </Box>
       ) : (
-        <Box sx={{ p: 4 }}>
-          <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: 3, fontWeight: 'bold' }}>
+        <Box className="customer-product-list">
+          <Typography variant="h5" className="customer-product-list-title">
             Product List
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, justifyContent: 'center' }}>
             {products.map((item, i) => (
-              <Paper
-                key={i}
-                elevation={5}
-                sx={{
-                  width: '250px',
-                  padding: 3,
-                  borderRadius: 3,
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  color: '#fff',
-                  textAlign: 'center',
-                }}
-              >
+              <Paper key={i} elevation={5} className="customer-product-card">
                 <img
                   src={item.imageUrl || '/images/placeholder.png'}
                   alt={item.pname}
-                  style={{
-                    width: '150px',
-                    height: '150px',
-                    objectFit: 'cover',
-                    borderRadius: '8px',
-                    marginBottom: '10px',
-                  }}
+                  className="customer-product-image"
                 />
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+                <Typography variant="subtitle1" className="customer-product-name">
                   {item.pname}
                 </Typography>
-                <Typography variant="body1" sx={{ marginBottom: 2 }}>
+                <Typography variant="body1" className="customer-product-price">
                   €{item.price}
                 </Typography>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => addToCart(item)}
-                  sx={{
-                    textTransform: 'none',
-                    backgroundColor: '#6272e3',
-                    ':hover': { backgroundColor: '#556bd8' },
-                  }}
+                  className="customer-add-to-cart-button"
                 >
                   Add to Cart
                 </Button>

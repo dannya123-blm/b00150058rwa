@@ -1,0 +1,70 @@
+.login-page {
+    flex-grow: 1;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    min-height: 100vh;
+  }
+
+  .login-appbar {
+    background: #1b1f3a;
+    box-shadow: none;
+  }
+
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 3rem;
+  }
+  
+  .login-logo {
+    margin-bottom: 2rem;
+    border-radius: 10px;
+  }
+  
+  .login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    background: #1b1f3a;
+    padding: 4rem;
+    border-radius: 2rem;
+  }
+  
+  /* Styling for TextFields */
+  .login-textfield {
+    background-color: white;
+  }
+  
+  /* Button styling */
+  .login-button {
+    margin-top: 2rem;
+    background-color: #6272e3;
+    color: white;
+  }
+  
+  .login-button:hover {
+    background-color: #556bd8;
+  }
+  
+  /* Message styling */
+  .login-message {
+    margin-top: 2rem;
+  }
+  
+  .login-message-success {
+    color: green;
+  }
+  
+  .login-message-error {
+    color: red;
+  }
+  
+  .login-link {
+    margin-top: 2rem;
+    color: #f3f3f3;
+  }
+  

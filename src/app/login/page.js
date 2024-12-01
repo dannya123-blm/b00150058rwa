@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { Box, Button, TextField, Typography, Link, Container, AppBar, Toolbar, IconButton } from '@mui/material';
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
-import MenuIcon from '@mui/icons-material/Menu'; 
+import MenuIcon from '@mui/icons-material/Menu';
+
+import '../../css/login.css';
 
 export default function AuthPage() {
     const [username, setUsername] = useState('');
@@ -39,20 +41,8 @@ export default function AuthPage() {
     };
 
     return (
-        <Box
-            sx={{
-                flexGrow: 1,
-                background: "linear-gradient(135deg, #6a11cb, #2575fc)", // Same gradient as the main page
-                minHeight: "100vh",
-            }}
-        >
-            <AppBar
-                position="static"
-                sx={{
-                    background: "#1b1f3a", // Darker color for the AppBar
-                    boxShadow: "none",
-                }}
-            >
+        <Box className="login-page">
+            <AppBar position="static" className="login-appbar">
                 <Toolbar>
                     <IconButton
                         size="large"
@@ -68,42 +58,16 @@ export default function AuthPage() {
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <Container
-                maxWidth="xs"
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    minHeight: "100vh",
-                    padding: 3,
-                }}
-            >
+            <Container maxWidth="xs" className="login-container">
                 <Image
                     src="/images/krispyKreme.png"
                     alt="Kirspy"
                     width={260}
                     height={200}
                     priority
-                    style={{
-                        marginBottom: "2rem",
-                        borderRadius: "10px",
-                    }}
+                    className="login-logo"
                 />
-                <Box
-                    component="form"
-                    onSubmit={handleLogin}
-                    sx={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        border: "none",
-                        background: "#1b1f3a",
-                        padding: 4,
-                        borderRadius: 2,
-                    }}
-                >
+                <Box component="form" onSubmit={handleLogin} className="login-form">
                     <TextField
                         fullWidth
                         variant="outlined"
@@ -111,7 +75,7 @@ export default function AuthPage() {
                         margin="normal"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        sx={{ bgcolor: "white" }}
+                        className="login-textfield"
                     />
                     <TextField
                         fullWidth
@@ -121,33 +85,25 @@ export default function AuthPage() {
                         margin="normal"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        sx={{ bgcolor: "white" }}
+                        className="login-textfield"
                     />
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{
-                            marginTop: 2,
-                            bgcolor: "#6272e3",
-                            color: "white",
-                            ":hover": { bgcolor: "#556bd8" },
-                        }}
+                        className="login-button"
                     >
                         Login
                     </Button>
                     {message && (
                         <Typography
                             variant="body2"
-                            sx={{
-                                marginTop: 2,
-                                color: message.includes("successful") ? "green" : "red",
-                            }}
+                            className={`login-message ${message.includes("successful") ? "login-message-success" : "login-message-error"}`}
                         >
                             {message}
                         </Typography>
                     )}
-                    <Typography variant="body2" sx={{ marginTop: 2, color: "#f3f3f3" }}>
+                    <Typography variant="body2" className="login-link">
                         Don't have an account?{" "}
                         <Link href="/" underline="hover" color="#1b1f3">
                             Sign Up here

@@ -1,0 +1,45 @@
+.checkout-container {
+    padding: 4rem;
+    background: linear-gradient(135deg, #43cea2, #185a9d);
+    min-height: 100vh;
+    color: #fff;
+  }
+  
+  .checkout-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-weight: bold;
+  }
+  
+  .loading-text {
+    text-align: center;
+    margin-top: 5rem;
+  }
+  
+  .cart-items-title {
+    margin-bottom: 2rem;
+  }
+  
+  .cart-item {
+    padding: 2rem;
+    margin-bottom: 1rem;
+    border-radius: 2rem;
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .cart-total {
+    margin-top: 3rem;
+  }
+  
+  .confirm-order-btn {
+    margin-top: 3rem;
+    width: 100%;
+    padding: 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .empty-cart-text {
+    text-align: center;
+    margin-top: 5rem;
+  }
+  

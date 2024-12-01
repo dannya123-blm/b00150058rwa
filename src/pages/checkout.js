@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, Typography, Paper, Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import '../css/checkout.css';
 
 export default function Checkout() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [openDialog, setOpenDialog] = useState(false); // State to control the dialog visibility
+  const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function Checkout() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    router.push('/customer/customerDashboard'); // Redirect to dashboard after closing dialog
+    router.push('/customer/customerDashboard');
   };
 
   const confirmOrder = async () => {
@@ -41,7 +42,7 @@ export default function Checkout() {
     });
 
     if (response.ok) {
-      setOpenDialog(true); // Open the dialog on successful order
+      setOpenDialog(true);
     } else {
       const error = await response.json();
       alert(`Failed to confirm order: ${error.message}`);
@@ -49,63 +50,33 @@ export default function Checkout() {
   };
 
   return (
-    <Box
-      sx={{
-        padding: 4,
-        background: 'linear-gradient(135deg, #43cea2, #185a9d)',
-        minHeight: '100vh',
-        color: '#fff',
-      }}
-    >
-      <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: 3, fontWeight: 'bold' }}>
+    <Box className="checkout-container">
+      <Typography variant="h4" className="checkout-title">
         Checkout
       </Typography>
       {loading ? (
-        <Typography sx={{ textAlign: 'center', marginTop: 5 }}>Loading cart details...</Typography>
+        <Typography className="loading-text">Loading cart details...</Typography>
       ) : cart ? (
         <Box>
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
+          <Typography variant="h6" className="cart-items-title">
             Items in your cart:
           </Typography>
           {cart.pnames.map((item, index) => (
-            <Paper
-              key={index}
-              sx={{
-                padding: 2,
-                marginBottom: 1,
-                borderRadius: 2,
-                background: 'rgba(255, 255, 255, 0.2)',
-              }}
-            >
+            <Paper key={index} className="cart-item">
               <Typography>{item}</Typography>
             </Paper>
           ))}
-          <Typography variant="h6" sx={{ marginTop: 3 }}>
+          <Typography variant="h6" className="cart-total">
             Total: {cart.total}
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              marginTop: 3,
-              width: '100%',
-              padding: 1.5,
-              fontSize: '1rem',
-            }}
-            onClick={confirmOrder}
-          >
+          <Button variant="contained" color="primary" className="confirm-order-btn" onClick={confirmOrder}>
             Confirm Order
           </Button>
         </Box>
       ) : (
-        <Typography sx={{ textAlign: 'center', marginTop: 5 }}>Your cart is empty.</Typography>
+        <Typography className="empty-cart-text">Your cart is empty.</Typography>
       )}
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        aria-labelledby="success-dialog-title"
-        aria-describedby="success-dialog-description"
-      >
+      <Dialog open={openDialog} onClose={handleCloseDialog} aria-labelledby="success-dialog-title">
         <DialogTitle id="success-dialog-title">{"Order Made Successfully!"}</DialogTitle>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary">

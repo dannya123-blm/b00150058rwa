@@ -1,0 +1,46 @@
+.manager-container {
+    flex-grow: 1;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    min-height: 100vh;
+    color: #fff;
+    padding: 4rem;
+}
+
+.manager-appbar {
+    background: #1b1f3a;
+    box-shadow: none;
+}
+
+.manager-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.manager-title {
+    flex-grow: 1;
+    font-weight: bold;
+}
+
+.manager-logout-button {
+    text-transform: none;
+    background-color: #e53935;
+}
+
+.manager-logout-button:hover {
+    background-color: #c62828;
+}
+
+.manager-order-stats-title {
+    margin-top: 2rem;
+}
+
+.manager-order-list-title {
+    margin-top: 4rem;
+}
+
+.manager-order-item {
+    padding: 1rem;
+    margin-top: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+}

@@ -15,6 +15,9 @@ import {
 import Image from "next/image";
 import MenuIcon from "@mui/icons-material/Menu";
 
+
+import '../css/register.css';
+
 export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -35,7 +38,7 @@ export default function Register() {
       body: JSON.stringify({
         username,
         email,
-        password, // We are no longer passing the role here
+        password,
       }),
     });
 
@@ -54,28 +57,10 @@ export default function Register() {
   };
 
   return (
-    <Box
-      sx={{
-        flexGrow: 1,
-        background: "linear-gradient(135deg, #6a11cb, #2575fc)", // Same gradient as the main page
-        minHeight: "100vh",
-      }}
-    >
-      <AppBar
-        position="static"
-        sx={{
-          background: "#1b1f3a", // Darker color for the AppBar
-          boxShadow: "none",
-        }}
-      >
+    <Box className="register-page">
+      <AppBar position="static" className="register-appbar">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
+          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -83,43 +68,17 @@ export default function Register() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Container
-        maxWidth="xs"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-          padding: 3,
-        }}
-      >
+      <Container maxWidth="xs" className="register-container">
         <Image
           src="/images/krispyKreme.png"
           alt="Kirspy"
           width={260}
           height={200}
           priority
-          style={{
-            marginBottom: "2rem",
-            borderRadius: "10px",
-          }}
+          className="register-logo"
         />
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            border: "none",
-            background: "#1b1f3a",
-            padding: 4,
-            borderRadius: 2,
-          }}
-        >
+        <Box component="form" onSubmit={handleSubmit} className="register-form">
           <TextField
             fullWidth
             variant="outlined"
@@ -127,7 +86,7 @@ export default function Register() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             margin="normal"
-            sx={{ bgcolor: "white" }}
+            className="register-textfield"
           />
           <TextField
             fullWidth
@@ -136,7 +95,7 @@ export default function Register() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             margin="normal"
-            sx={{ bgcolor: "white" }}
+            className="register-textfield"
           />
           <TextField
             fullWidth
@@ -146,7 +105,7 @@ export default function Register() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             margin="normal"
-            sx={{ bgcolor: "white" }}
+            className="register-textfield"
           />
 
           <Button
@@ -154,30 +113,19 @@ export default function Register() {
             type="submit"
             variant="contained"
             disabled={loading}
-            sx={{
-              marginTop: 2,
-              bgcolor: "#6272e3",
-              color: "white",
-              ":hover": { bgcolor: "#556bd8" },
-            }}
+            className="register-button"
           >
             {loading ? "Registering..." : "Register"}
           </Button>
           {message && (
             <Typography
               variant="body2"
-              sx={{
-                marginTop: 2,
-                color: message.includes("successful") ? "green" : "red",
-              }}
+              className={`register-message ${message.includes("successful") ? "register-message-success" : "register-message-error"}`}
             >
               {message}
             </Typography>
           )}
-          <Typography
-            variant="body2"
-            sx={{ marginTop: 2, color: "#f3f3f3" }}
-          >
+          <Typography variant="body2" className="register-link">
             Already have an account?{" "}
             <Link href="/login" underline="hover" color="#1b1f3">
               Login here
