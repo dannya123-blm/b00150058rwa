@@ -69,15 +69,7 @@ export default function Register() {
         </Toolbar>
       </AppBar>
       <Container maxWidth="xs" className="register-container">
-        <Image
-          src="/images/krispyKreme.png"
-          alt="Kirspy"
-          width={260}
-          height={200}
-          priority
-          className="register-logo"
-        />
-
+  
         <Box component="form" onSubmit={handleSubmit} className="register-form">
           <TextField
             fullWidth

@@ -59,14 +59,6 @@ export default function AuthPage() {
                 </Toolbar>
             </AppBar>
             <Container maxWidth="xs" className="login-container">
-                <Image
-                    src="/images/krispyKreme.png"
-                    alt="Kirspy"
-                    width={260}
-                    height={200}
-                    priority
-                    className="login-logo"
-                />
                 <Box component="form" onSubmit={handleLogin} className="login-form">
                     <TextField
                         fullWidth
