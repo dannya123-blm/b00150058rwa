@@ -11,15 +11,12 @@ export default function ManagerDashboard() {
     useEffect(() => {
         const fetchOrders = async () => {
             setLoading(true);
-            try {
-                const response = await fetch('/api/getOrders');
-                const data = await response.json();
-                if (!response.ok) {
-                    throw new Error('Failed to fetch orders: ' + data.message);
-                }
+            const response = await fetch('/api/getOrders');
+            const data = await response.json();
+            if (response.ok) {
                 setOrders(data.orders);
-            } catch (error) {
-                console.error('Error fetching orders:', error);
+            } else {
+                console.error('Error fetching orders:', data.message);
             }
             setLoading(false);
         };

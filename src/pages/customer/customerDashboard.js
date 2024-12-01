@@ -15,16 +15,11 @@ export default function DashboardPage() {
   // Fetch weather data
   useEffect(() => {
     const fetchWeather = async () => {
-      try {
-        const response = await fetch(
-          'http://api.weatherapi.com/v1/current.json?key=a5bec305169942fe99f142501242110&q=Dublin&aqi=no'
-        );
-        if (!response.ok) throw new Error('Failed to fetch weather data');
-        const data = await response.json();
-        setWeather(data.current);
-      } catch (error) {
-        console.error('Weather fetch error:', error);
-      }
+      const response = await fetch(
+        'http://api.weatherapi.com/v1/current.json?key=a5bec305169942fe99f142501242110&q=Dublin&aqi=no'
+      );
+      const data = await response.json();
+      setWeather(data.current);
     };
     fetchWeather();
   }, []);
@@ -32,9 +27,9 @@ export default function DashboardPage() {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (userData) {
-        console.log("Logged in as:", userData.username);
+      console.log("Logged in as:", userData.username);
     } else {
-        router.push('/login');
+      router.push('/login');
     }
   }, []);
 
@@ -47,16 +42,10 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {
-        const response = await fetch('/api/getProducts');
-        if (!response.ok) throw new Error('Failed to fetch products');
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        console.error('Fetch error:', error);
-      } finally {
-        setLoading(false);
-      }
+      const response = await fetch('/api/getProducts');
+      const data = await response.json();
+      setProducts(data);
+      setLoading(false);
     };
     fetchData();
   }, []);

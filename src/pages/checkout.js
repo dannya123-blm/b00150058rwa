@@ -10,19 +10,15 @@ export default function Checkout() {
 
   useEffect(() => {
     const fetchCart = async () => {
-      try {
-        const response = await fetch('/api/getCart');
-        if (response.ok) {
-          const data = await response.json();
-          setCart(data);
-        } else {
-          alert('Failed to fetch cart');
-        }
-      } catch (error) {
-        console.error('Error fetching cart:', error);
-      } finally {
-        setLoading(false);
+      setLoading(true);
+      const response = await fetch('/api/getCart');
+      if (response.ok) {
+        const data = await response.json();
+        setCart(data);
+      } else {
+        alert('Failed to fetch cart');
       }
+      setLoading(false);
     };
     fetchCart();
   }, []);
@@ -38,22 +34,17 @@ export default function Checkout() {
       return;
     }
 
-    try {
-      const response = await fetch('/api/confirmOrder', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cart),
-      });
+    const response = await fetch('/api/confirmOrder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cart),
+    });
 
-      if (response.ok) {
-        setOpenDialog(true); // Open the dialog on successful order
-      } else {
-        const error = await response.json();
-        alert(`Failed to confirm order: ${error.message}`);
-      }
-    } catch (error) {
-      console.error('Error confirming order:', error);
-      alert('An error occurred. Please try again.');
+    if (response.ok) {
+      setOpenDialog(true); // Open the dialog on successful order
+    } else {
+      const error = await response.json();
+      alert(`Failed to confirm order: ${error.message}`);
     }
   };
 
