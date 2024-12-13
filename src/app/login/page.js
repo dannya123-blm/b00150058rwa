@@ -1,22 +1,19 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
-import { Box, Button, TextField, Typography, Link, Container, AppBar, Toolbar, IconButton } from '@mui/material';
-import Image from "next/image";
+import { Box, Button, TextField, Typography, Container, AppBar, Toolbar, IconButton } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import MenuIcon from '@mui/icons-material/Menu';
-
-import '../../css/login.css';
 
 export default function AuthPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [message, setMessage] = useState(''); // Added message state to show login status
+    const [message, setMessage] = useState('');
     const router = useRouter();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setMessage(''); // Clear any previous message
+        setMessage('');
 
         const response = await fetch('/api/login', {
             method: 'POST',
@@ -27,8 +24,8 @@ export default function AuthPage() {
         const data = await response.json();
 
         if (response.ok) {
-            localStorage.setItem('userData', JSON.stringify(data.userData)); // Save user data to local storage
-            setMessage('Login successful'); // Show success message
+            localStorage.setItem('userData', JSON.stringify(data.userData));
+            setMessage('Login successful');
 
             if (data.userData.role === 'manager') {
                 router.push('/manager/managerDashboard');
@@ -36,71 +33,53 @@ export default function AuthPage() {
                 router.push('/customer/customerDashboard');
             }
         } else {
-            setMessage(data.message || 'Invalid username or password'); // Show error message
+            setMessage(data.message || 'Invalid username or password');
         }
     };
 
     return (
-        <Box className="login-page">
-            <AppBar position="static" className="login-appbar">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                    >
+        <Box className="customer-dashboard" sx={{ background: 'linear-gradient(45deg, #2196F3, #21CBF3)', minHeight: '100vh' }}>
+            <AppBar position="static" className="customer-appbar" sx={{ background: 'linear-gradient(45deg, #1A237E, #2196F3)' }}>
+                <Toolbar className="customer-toolbar">
+                    <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                         Login
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <Container maxWidth="xs" className="login-container">
-                <Box component="form" onSubmit={handleLogin} className="login-form">
+
+            <Container maxWidth="xs" sx={{ mt: 3 }}>
+                <Box component="form" onSubmit={handleLogin} sx={{ backgroundColor: '#fff', padding: 3, borderRadius: 2 }}>
                     <TextField
                         fullWidth
+                        required
                         variant="outlined"
                         label="Username"
-                        margin="normal"
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="login-textfield"
+                        onChange={(e) => setUsername(e.target.value.slice(0, 30))}
+                        margin="normal"
                     />
                     <TextField
                         fullWidth
+                        required
                         variant="outlined"
                         label="Password"
                         type="password"
-                        margin="normal"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="login-textfield"
+                        onChange={(e) => setPassword(e.target.value.slice(0, 30))}
+                        margin="normal"
                     />
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
-                        className="login-button"
+                        sx={{ mt: 2, background: 'linear-gradient(45deg, #2196F3, #21CBF3)', color: '#fff' }}
                     >
                         Login
                     </Button>
-                    {message && (
-                        <Typography
-                            variant="body2"
-                            className={`login-message ${message.includes("successful") ? "login-message-success" : "login-message-error"}`}
-                        >
-                            {message}
-                        </Typography>
-                    )}
-                    <Typography variant="body2" className="login-link">
-                        Don't have an account?{" "}
-                        <Link href="/" underline="hover" color="#1b1f3">
-                            Sign Up here
-                        </Link>
-                    </Typography>
+                    {message && <Typography sx={{ mt: 2 }}>{message}</Typography>}
                 </Box>
             </Container>
         </Box>
