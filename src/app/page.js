@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Box,
     Button,
@@ -27,15 +27,74 @@ export default function Register() {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const [messageColor, setMessageColor] = useState("");
-    const router = useRouter(); // To navigate to login page
+    const [naughtyStrings, setNaughtyStrings] = useState([]); // To store the dynamically fetched BLNS
+    const router = useRouter();
+
+    // Fetch the BLNS dynamically when the component mounts
+    useEffect(() => {
+        const fetchNaughtyStrings = async () => {
+            try {
+                const response = await fetch(
+                    "https://raw.githubusercontent.com/minimaxir/big-list-of-naughty-strings/master/blns.json"
+                );
+                if (response.ok) {
+                    const data = await response.json();
+                    setNaughtyStrings(data); // Save the naughty strings
+                } else {
+                    console.error("Failed to fetch naughty strings");
+                }
+            } catch (error) {
+                console.error("Error fetching naughty strings:", error);
+            }
+        };
+
+        fetchNaughtyStrings();
+    }, []);
+
+    // **Field-specific validation rules**
+    const isValidUsername = (username) => /^[a-zA-Z0-9_]{3,30}$/.test(username); // 3-30 characters, alphanumeric, underscores
+    const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email); // Simple email regex
+    const isValidPassword = (password) => password.length >= 8 && password.length <= 30; // Length between 8 and 30
+
+    // **BLNS Validation**
+    const isValidInput = (input) => {
+        // Reject input if it matches any naughty string
+        return !naughtyStrings.some((str) => input.includes(str));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage("");
 
-        // **Blank field check**: Ensure no field is empty or whitespace-only
+        // **Blank field check**
         if (!username.trim() || !email.trim() || !password.trim()) {
             setMessage("All fields are required.");
+            setMessageColor("red");
+            return;
+        }
+
+        // **Field-specific validation**
+        if (!isValidUsername(username)) {
+            setMessage("Invalid username. Only alphanumeric characters and underscores are allowed (3-30 chars).");
+            setMessageColor("red");
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            setMessage("Invalid email format.");
+            setMessageColor("red");
+            return;
+        }
+
+        if (!isValidPassword(password)) {
+            setMessage("Password must be between 8 and 30 characters.");
+            setMessageColor("red");
+            return;
+        }
+
+        // **BLNS Validation**
+        if (!isValidInput(username) || !isValidInput(email) || !isValidInput(password)) {
+            setMessage("Input contains invalid or forbidden characters.");
             setMessageColor("red");
             return;
         }
@@ -44,13 +103,6 @@ export default function Register() {
         const escapedUsername = escapeInput(username.trim());
         const escapedEmail = escapeInput(email.trim());
         const escapedPassword = escapeInput(password.trim());
-
-        // **Type validation**: Ensure email follows proper format
-        if (!/\S+@\S+\.\S+/.test(escapedEmail)) {
-            setMessage("Invalid email format.");
-            setMessageColor("red");
-            return;
-        }
 
         try {
             const response = await fetch("/api/register", {
@@ -68,7 +120,7 @@ export default function Register() {
             if (response.ok) {
                 setMessage(data.message || "Registration successful");
                 setMessageColor("green");
-                setUsername(""); // Clear input fields on success
+                setUsername("");
                 setEmail("");
                 setPassword("");
             } else {
@@ -138,12 +190,11 @@ export default function Register() {
                             {message}
                         </Typography>
                     )}
-                    {/* Login button */}
                     <Button
                         fullWidth
                         variant="outlined"
                         sx={{ mt: 2, color: '#2196F3', borderColor: '#2196F3' }}
-                        onClick={() => router.push("/login")} // Navigate to login page
+                        onClick={() => router.push("/login")}
                     >
                         Already have an account? Login
                     </Button>
