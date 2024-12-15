@@ -16,9 +16,16 @@ import { useRouter } from "next/navigation";
 
 // Function to escape HTML characters to prevent XSS attacks
 const escapeInput = (input) => {
-    const div = document.createElement("div");
-    div.innerText = input;
-    return div.innerHTML;
+    return input.replace(/[&<>"']/g, (match) => {
+        const escapeMap = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;",
+        };
+        return escapeMap[match];
+    });
 };
 
 export default function Register() {
@@ -27,10 +34,10 @@ export default function Register() {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const [messageColor, setMessageColor] = useState("");
-    const [naughtyStrings, setNaughtyStrings] = useState([]); // To store the dynamically fetched BLNS
+    const [naughtyStrings, setNaughtyStrings] = useState([]); // Dynamically fetched BLNS
     const router = useRouter();
 
-    // Fetch the BLNS dynamically when the component mounts
+    // Fetch the Big List of Naughty Strings on mount
     useEffect(() => {
         const fetchNaughtyStrings = async () => {
             try {
@@ -39,9 +46,9 @@ export default function Register() {
                 );
                 if (response.ok) {
                     const data = await response.json();
-                    setNaughtyStrings(data); // Save the naughty strings
+                    setNaughtyStrings(data);
                 } else {
-                    console.error("Failed to fetch naughty strings");
+                    console.error("Failed to fetch naughty strings.");
                 }
             } catch (error) {
                 console.error("Error fetching naughty strings:", error);
@@ -51,31 +58,34 @@ export default function Register() {
         fetchNaughtyStrings();
     }, []);
 
-    // **Field-specific validation rules**
-    const isValidUsername = (username) => /^[a-zA-Z0-9_]{3,30}$/.test(username); // 3-30 characters, alphanumeric, underscores
-    const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email); // Simple email regex
-    const isValidPassword = (password) => password.length >= 8 && password.length <= 30; // Length between 8 and 30
+    // **Validation Rules**
+    const isValidUsername = (username) => /^[a-zA-Z0-9_]{3,30}$/.test(username);
+    const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
+    const isValidPassword = (password) => password.length >= 8 && password.length <= 30;
 
-    // **BLNS Validation**
-    const isValidInput = (input) => {
-        // Reject input if it matches any naughty string
-        return !naughtyStrings.some((str) => input.includes(str));
+    // Check input against naughty strings
+    const containsNaughtyString = (input) => {
+        return (
+            naughtyStrings.length > 0 &&
+            naughtyStrings.some((str) => input.includes(str))
+        );
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage("");
 
-        // **Blank field check**
+        // **Field-Specific Validation**
         if (!username.trim() || !email.trim() || !password.trim()) {
             setMessage("All fields are required.");
             setMessageColor("red");
             return;
         }
 
-        // **Field-specific validation**
         if (!isValidUsername(username)) {
-            setMessage("Invalid username. Only alphanumeric characters and underscores are allowed (3-30 chars).");
+            setMessage(
+                "Invalid username. Only alphanumeric characters and underscores are allowed (3-30 chars)."
+            );
             setMessageColor("red");
             return;
         }
@@ -92,18 +102,23 @@ export default function Register() {
             return;
         }
 
-        // **BLNS Validation**
-        if (!isValidInput(username) || !isValidInput(email) || !isValidInput(password)) {
+        // **Naughty Strings Validation**
+        if (
+            containsNaughtyString(username) ||
+            containsNaughtyString(email) ||
+            containsNaughtyString(password)
+        ) {
             setMessage("Input contains invalid or forbidden characters.");
             setMessageColor("red");
             return;
         }
 
-        // Escape user input to prevent XSS
+        // Escape input to prevent XSS
         const escapedUsername = escapeInput(username.trim());
         const escapedEmail = escapeInput(email.trim());
         const escapedPassword = escapeInput(password.trim());
 
+        // Submit the data to the server
         try {
             const response = await fetch("/api/register", {
                 method: "POST",
@@ -118,13 +133,13 @@ export default function Register() {
             const data = await response.json();
 
             if (response.ok) {
-                setMessage(data.message || "Registration successful");
+                setMessage(data.message || "Registration successful.");
                 setMessageColor("green");
                 setUsername("");
                 setEmail("");
                 setPassword("");
             } else {
-                setMessage(data.message || "Registration failed");
+                setMessage(data.message || "Registration failed.");
                 setMessageColor("red");
             }
         } catch (error) {
@@ -134,24 +149,42 @@ export default function Register() {
     };
 
     return (
-        <Box className="customer-dashboard" sx={{ background: 'linear-gradient(45deg, #2196F3, #21CBF3)', minHeight: '100vh' }}>
-            <AppBar position="static" className="customer-appbar" sx={{ background: 'linear-gradient(45deg, #1A237E, #2196F3)' }}>
-                <Toolbar className="customer-toolbar">
+        <Box
+            className="customer-dashboard"
+            sx={{
+                background: "linear-gradient(45deg, #2196F3, #21CBF3)",
+                minHeight: "100vh",
+            }}
+        >
+            <AppBar
+                position="static"
+                className="customer-appbar"
+                sx={{ background: "linear-gradient(45deg, #1A237E, #2196F3)" }}
+            >
+                <Toolbar>
                     <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                         Register
                     </Typography>
                 </Toolbar>
             </AppBar>
 
             <Container maxWidth="xs" sx={{ mt: 3 }}>
-                <Box component="form" onSubmit={handleSubmit} sx={{ backgroundColor: '#fff', padding: 3, borderRadius: 2 }}>
+                <Box
+                    component="form"
+                    onSubmit={handleSubmit}
+                    sx={{
+                        backgroundColor: "#fff",
+                        padding: 3,
+                        borderRadius: 2,
+                        boxShadow: 3,
+                    }}
+                >
                     <TextField
                         fullWidth
                         required
-                        variant="outlined"
                         label="Username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value.slice(0, 30))}
@@ -160,9 +193,7 @@ export default function Register() {
                     <TextField
                         fullWidth
                         required
-                        variant="outlined"
                         label="Email"
-                        type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         margin="normal"
@@ -170,7 +201,6 @@ export default function Register() {
                     <TextField
                         fullWidth
                         required
-                        variant="outlined"
                         label="Password"
                         type="password"
                         value={password}
@@ -181,19 +211,17 @@ export default function Register() {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 2, background: 'linear-gradient(45deg, #2196F3, #21CBF3)', color: '#fff' }}
+                        sx={{ mt: 2, background: "linear-gradient(45deg, #2196F3, #21CBF3)" }}
                     >
                         Register
                     </Button>
                     {message && (
-                        <Typography sx={{ mt: 2, color: messageColor }}>
-                            {message}
-                        </Typography>
+                        <Typography sx={{ mt: 2, color: messageColor }}>{message}</Typography>
                     )}
                     <Button
                         fullWidth
                         variant="outlined"
-                        sx={{ mt: 2, color: '#2196F3', borderColor: '#2196F3' }}
+                        sx={{ mt: 2 }}
                         onClick={() => router.push("/login")}
                     >
                         Already have an account? Login
