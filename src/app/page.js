@@ -28,48 +28,31 @@ const escapeInput = (input) => {
     });
 };
 
+// Function to check for illegal or dangerous inputs
+const containsNaughtyString = (input) => {
+    const dangerousPatterns = [
+        /<script.*?>.*?<\/script>/gi, // Script tags
+        /<img\s+src=["'].*?["']/gi,  // Inline image tags
+        /javascript:/gi,             // JavaScript scheme
+        /on\w+=["'].*?["']/gi,       // Inline event handlers like onclick=""
+        /<.*?>/gi,                   // Generic HTML tags
+    ];
+
+    return dangerousPatterns.some((pattern) => pattern.test(input));
+};
+
 export default function Register() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const [messageColor, setMessageColor] = useState("");
-    const [naughtyStrings, setNaughtyStrings] = useState([]); // Dynamically fetched BLNS
     const router = useRouter();
 
-    // Fetch the Big List of Naughty Strings on mount
-    useEffect(() => {
-        const fetchNaughtyStrings = async () => {
-            try {
-                const response = await fetch(
-                    "https://raw.githubusercontent.com/minimaxir/big-list-of-naughty-strings/master/blns.json"
-                );
-                if (response.ok) {
-                    const data = await response.json();
-                    setNaughtyStrings(data);
-                } else {
-                    console.error("Failed to fetch naughty strings.");
-                }
-            } catch (error) {
-                console.error("Error fetching naughty strings:", error);
-            }
-        };
-
-        fetchNaughtyStrings();
-    }, []);
-
-    // **Validation Rules**
+    // Validation Rules
     const isValidUsername = (username) => /^[a-zA-Z0-9_]{3,30}$/.test(username);
     const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
     const isValidPassword = (password) => password.length >= 8 && password.length <= 30;
-
-    // Check input against naughty strings
-    const containsNaughtyString = (input) => {
-        return (
-            naughtyStrings.length > 0 &&
-            naughtyStrings.some((str) => input.includes(str))
-        );
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -102,7 +85,7 @@ export default function Register() {
             return;
         }
 
-        // **Naughty Strings Validation**
+        // **Illegal Character Check**
         if (
             containsNaughtyString(username) ||
             containsNaughtyString(email) ||
@@ -158,7 +141,6 @@ export default function Register() {
         >
             <AppBar
                 position="static"
-                className="customer-appbar"
                 sx={{ background: "linear-gradient(45deg, #1A237E, #2196F3)" }}
             >
                 <Toolbar>
@@ -172,16 +154,7 @@ export default function Register() {
             </AppBar>
 
             <Container maxWidth="xs" sx={{ mt: 3 }}>
-                <Box
-                    component="form"
-                    onSubmit={handleSubmit}
-                    sx={{
-                        backgroundColor: "#fff",
-                        padding: 3,
-                        borderRadius: 2,
-                        boxShadow: 3,
-                    }}
-                >
+                <Box component="form" onSubmit={handleSubmit} sx={{ backgroundColor: "#fff", padding: 3, borderRadius: 2 }}>
                     <TextField
                         fullWidth
                         required
@@ -211,21 +184,15 @@ export default function Register() {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 2, background: "linear-gradient(45deg, #2196F3, #21CBF3)" }}
+                        sx={{ mt: 2 }}
                     >
                         Register
                     </Button>
                     {message && (
-                        <Typography sx={{ mt: 2, color: messageColor }}>{message}</Typography>
+                        <Typography sx={{ mt: 2, color: messageColor }}>
+                            {message}
+                        </Typography>
                     )}
-                    <Button
-                        fullWidth
-                        variant="outlined"
-                        sx={{ mt: 2 }}
-                        onClick={() => router.push("/login")}
-                    >
-                        Already have an account? Login
-                    </Button>
                 </Box>
             </Container>
         </Box>
